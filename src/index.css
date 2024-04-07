@@ -10,6 +10,10 @@ body {
   color: #fff;
 }
 
+.flex {
+  display: flex;
+}
+
 .px-1 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -29,4 +33,10 @@ body {
 .navbar {
   background-color: #050816;
   border-bottom: solid 2px #392793;
+}
+
+.filter {
+  background-color: #0c132f;
+  border-bottom: solid 1px #423c5f;
+  justify-content: space-between;
 }
