@@ -40,3 +40,34 @@ body {
   border-bottom: solid 1px #423c5f;
   justify-content: space-between;
 }
+
+.repository {
+  display: flex;
+  background-color: #1d1836;
+  margin: 1em 0;
+  box-shadow: 0 2px 0 #ddd;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.repository__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.repository__footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.repository__footer__link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #607ceb;
+  gap: 5px;
+}
+
+.repository__footer__link:a {
+  padding-left: 10px;
+}
