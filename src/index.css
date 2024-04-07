@@ -41,23 +41,50 @@ body {
   justify-content: space-between;
 }
 
+.filter__checkbox {
+  cursor: pointer;
+}
+
+.repository-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .repository {
   display: flex;
   background-color: #1d1836;
-  margin: 1em 0;
-  box-shadow: 0 2px 0 #ddd;
+  margin: 0.5rem 0;
+  box-shadow: 0 1px 0 #333030;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  padding: 1rem;
 }
 
 .repository__header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.repository__header__name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.repository__header__star {
+  cursor: pointer;
 }
 
 .repository__footer {
   display: flex;
   justify-content: space-between;
+}
+
+.repository__footer__language-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .repository__footer__link {
@@ -70,4 +97,27 @@ body {
 
 .repository__footer__link:a {
   padding-left: 10px;
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #392793;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 2s linear infinite;
+  align-self: center;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: red;
 }

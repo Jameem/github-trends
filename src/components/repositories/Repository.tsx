@@ -1,25 +1,29 @@
-import { FaGithub } from 'react-icons/fa';
 import { Star } from './Star';
+import { Footer } from './Footer';
 
-export const Repository = () => {
+interface RepositoryProps {
+  id: number;
+  name: string;
+  description?: string;
+  html_url: string;
+  language?: string;
+  stargazers_count?: string;
+}
+
+export const Repository = (props: RepositoryProps) => {
+  const { name, description, language, html_url, stargazers_count } = props;
   return (
     <article className='repository px-1'>
       <header className='repository__header'>
-        <h4>Google Chrome</h4>
-        <Star />
+        <span className='repository__header__name'>{name}</span>
+        <Star {...props} />
       </header>
-      <small> description goes here</small>
-      <div className='repository__footer'>
-        <a
-          href='www.google.com'
-          target='_blank'
-          className='repository__footer__link'
-        >
-          <FaGithub />
-          <small>View on Github</small>
-        </a>
-        <span>Stars 10</span>
-      </div>
+      {description && <small> {description}</small>}
+      <Footer
+        language={language}
+        githubUrl={html_url}
+        stargazers_count={stargazers_count}
+      />
     </article>
   );
 };
