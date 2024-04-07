@@ -1,15 +1,10 @@
-import { Filter } from './components/FIlter';
-import { Navbar } from './components/Navbar';
-import { Repositories } from './components/repositories/Index';
+import { AppContainer } from './components/AppContainer';
+import { initializeAxios } from './utils/api';
 
 function App() {
-  return (
-    <main className='container px-1'>
-      <Navbar />
-      <Filter />
-      <Repositories />
-    </main>
-  );
+  initializeAxios();
+
+  return <AppContainer />;
 }
 
 export default App;
