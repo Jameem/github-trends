@@ -1,10 +1,12 @@
 import { FaGithub } from 'react-icons/fa';
+import { Star } from './Star';
 
 export const Repository = () => {
   return (
     <article className='repository px-1'>
       <header className='repository__header'>
-        <h4>Name</h4>
+        <h4>Google Chrome</h4>
+        <Star />
       </header>
       <small> description goes here</small>
       <div className='repository__footer'>
@@ -16,7 +18,7 @@ export const Repository = () => {
           <FaGithub />
           <small>View on Github</small>
         </a>
-        <span>10 Stars</span>
+        <span>Stars 10</span>
       </div>
     </article>
   );
