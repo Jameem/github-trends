@@ -10,6 +10,7 @@ interface StarProps {
   stargazers_count?: string;
 }
 
+// Check whether a repository is already starred
 const isStarredRepo = (repoId: number) => {
   const starredRepos = localStorage.getItem('starred');
   if (!starredRepos) {
@@ -21,18 +22,22 @@ const isStarredRepo = (repoId: number) => {
 };
 
 export const Star = (props: StarProps) => {
-  const [starred, setStarred] = useState(isStarredRepo(props.id));
+  const { id } = props;
+  const [starred, setStarred] = useState(isStarredRepo(id));
 
   const onClick = () => {
     const starredRepos = localStorage.getItem('starred');
+
+    // Set the localstorage array if it isn't already and add the repo
     if (!starredRepos) {
       localStorage.setItem('starred', JSON.stringify([props]));
       setStarred(true);
       return;
     }
 
+    // Add the repo to the existing localstorage array
     const starredReposArray: StarProps[] = JSON.parse(starredRepos);
-    if (!isStarredRepo(props.id)) {
+    if (!isStarredRepo(id)) {
       localStorage.setItem(
         'starred',
         JSON.stringify([...starredReposArray, { ...props }])
@@ -41,18 +46,28 @@ export const Star = (props: StarProps) => {
       return;
     }
 
-    const refinedArray = starredReposArray.filter((repo) => {
-      return repo.id !== props.id;
-    });
+    // Remove the repo from the array when user clicks again
+    const refinedArray = starredReposArray.filter((repo) => repo.id !== id);
     localStorage.setItem('starred', JSON.stringify(refinedArray));
     setStarred(false);
   };
+
   return (
-    <div className='repository__header__star'>
+    <div className='repository__header__star' data-testid='star'>
       {starred ? (
-        <FaStar color='#c5a455' onClick={onClick} />
+        <FaStar
+          color='#c5a455'
+          onClick={onClick}
+          data-testid='starred'
+          size={20}
+        />
       ) : (
-        <FaRegStar color='#c5a455' onClick={onClick} />
+        <FaRegStar
+          color='#c5a455'
+          onClick={onClick}
+          data-testid='not-starred'
+          size={20}
+        />
       )}
     </div>
   );
