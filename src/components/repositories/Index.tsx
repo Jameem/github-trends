@@ -14,9 +14,13 @@ interface IRepo {
 
 interface RepositoryProps {
   showStarredRepos: boolean;
+  languageFilter?: string;
 }
 
-export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
+export const Repositories = ({
+  showStarredRepos,
+  languageFilter,
+}: RepositoryProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [repositories, setRepositories] = useState<IRepo[]>([]);
   const [error, setError] = useState('');
@@ -25,15 +29,15 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
 
   const handleError = (error: Error) => {
     console.error(error);
-    setIsLoading(false);
     setError(error.message);
   };
 
+  // Fetch data on initial render
   useEffect(() => {
     const getData = async () => {
       try {
         setIsLoading(true);
-        const response = await getRepos(1);
+        const response = await getRepos(1, languageFilter);
 
         if (!response?.data?.items.length) {
           setIsEmpty(true);
@@ -42,28 +46,27 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
 
         const repos = response.data.items;
         setRepositories(repos);
-        setIsLoading(false);
         setPage((prevPage) => prevPage + 1);
       } catch (error) {
         handleError(error as Error);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
 
     if (!showStarredRepos) {
       getData();
-      return;
     }
-  }, [showStarredRepos]);
+  }, [showStarredRepos, languageFilter]);
 
+  // Fetch data on scroll down to the bottom of the list
   const fetchData = useCallback(async () => {
     if (isLoading) return;
 
     setIsLoading(true);
 
     try {
-      const response = await getRepos(page);
+      const response = await getRepos(page, languageFilter);
 
       if (!response?.data?.items.length) {
         setIsEmpty(true);
@@ -72,15 +75,15 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
 
       const repos = response.data.items;
       setRepositories((prevItems) => [...prevItems, ...repos]);
-      setIsLoading(false);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
       handleError(error as Error);
+    } finally {
+      setIsLoading(false);
     }
+  }, [isLoading, page, languageFilter]);
 
-    setIsLoading(false);
-  }, [isLoading, page]);
-
+  // Add scroll event listener for infinte scrolling
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -99,6 +102,7 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
     };
   }, [fetchData, isLoading]);
 
+  // Show starred repos on filter change
   useEffect(() => {
     if (!showStarredRepos) {
       return;
@@ -111,8 +115,6 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
 
     const starredReposArray = JSON.parse(starredRepos);
 
-    console.log('starredReposArray', starredReposArray);
-
     setRepositories(starredReposArray);
   }, [showStarredRepos]);
 
@@ -122,21 +124,9 @@ export const Repositories = ({ showStarredRepos }: RepositoryProps) => {
         <h1>Repositories</h1>
       </header>
       <div className='repository-container'>
-        {repositories.map(
-          ({ name, stargazers_count, description, html_url, language, id }) => {
-            return (
-              <Repository
-                key={id}
-                name={name}
-                description={description}
-                html_url={html_url}
-                stargazers_count={stargazers_count}
-                language={language}
-                id={id}
-              />
-            );
-          }
-        )}
+        {repositories.map((repository) => {
+          return <Repository key={repository.id} {...repository} />;
+        })}
         {isLoading && <Spinner />}
         {isEmpty && <small>No more data to load.</small>}
         {error && <span className='error'>{error}</span>}

@@ -15,10 +15,16 @@ export const Repository = (props: RepositoryProps) => {
   return (
     <article className='repository px-1'>
       <header className='repository__header'>
-        <span className='repository__header__name'>{name}</span>
+        <span className='repository__header__name' data-testid='name'>
+          {name}
+        </span>
         <Star {...props} />
       </header>
-      {description && <small> {description}</small>}
+      {description && (
+        <div className='repository__description' data-testid='description'>
+          <small> {description}</small>
+        </div>
+      )}
       <Footer
         language={language}
         githubUrl={html_url}
