@@ -49,6 +49,7 @@ export const Repositories = ({
         const repos = response.data.items;
         setRepositories(repos);
         setPage((prevPage) => prevPage + 1);
+        setIsEmpty(false);
       } catch (error) {
         handleError(error as Error);
       } finally {
@@ -89,10 +90,13 @@ export const Repositories = ({
   // Add scroll event listener for infinte scrolling
   useEffect(() => {
     const handleScroll = () => {
+      if (isLoading || isEmpty) {
+        return;
+      }
+
       if (
         window.innerHeight + document.documentElement.scrollTop !==
-          document.documentElement.offsetHeight ||
-        isLoading
+        document.documentElement.offsetHeight
       ) {
         return;
       }
@@ -103,7 +107,7 @@ export const Repositories = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [fetchData, isLoading]);
+  }, [fetchData, isLoading, isEmpty]);
 
   // Show starred repos on filter change
   useEffect(() => {
@@ -140,7 +144,7 @@ export const Repositories = ({
           return <Repository key={repository.id} {...repository} />;
         })}
         {isLoading && <Spinner />}
-        {isEmpty && !isLoading && <small>{emptyMessage}</small>}
+        {isEmpty && !isLoading && <h4>{emptyMessage}</h4>}
         {error && <span className='error'>{error}</span>}
       </div>
     </section>
