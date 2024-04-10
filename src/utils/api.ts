@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getDate } from './date';
+import { getFilterDate } from './date';
 
 // Setup axios base configuration
 export const initializeAxios = () => {
@@ -11,7 +11,7 @@ export const initializeAxios = () => {
 };
 
 export const getRepos = async (page: number, language = '') => {
-  const url = `repositories?q=created:>${getDate()}+language:${language}&sort=stars&order=desc&per_page=10&page=${page}`;
+  const url = `repositories?q=created:>${getFilterDate()}+language:${language}&sort=stars&order=desc&per_page=10&page=${page}`;
 
   return axios.get(url);
 };
