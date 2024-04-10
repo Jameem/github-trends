@@ -19,7 +19,6 @@ export const languages = [
   'PEARL',
   'Perl',
   'PHP',
-  'Pico',
   'PowerShell',
   'Python',
   'Swift',
