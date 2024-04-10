@@ -153,6 +153,7 @@ body {
   height: 32px;
   animation: spin 2s linear infinite;
   align-self: center;
+  margin-top: -35px;
 }
 
 @keyframes spin {
