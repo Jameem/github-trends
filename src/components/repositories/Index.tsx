@@ -26,6 +26,7 @@ export const Repositories = ({
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [emptyMessage, setEmptyMessage] = useState('');
 
   const handleError = (error: Error) => {
     console.error(error);
@@ -40,6 +41,7 @@ export const Repositories = ({
         const response = await getRepos(1, languageFilter);
 
         if (!response?.data?.items.length) {
+          setEmptyMessage('No trending repositories to show.');
           setIsEmpty(true);
           return;
         }
@@ -70,6 +72,7 @@ export const Repositories = ({
 
       if (!response?.data?.items.length) {
         setIsEmpty(true);
+        setEmptyMessage('No more repositories to load.');
         return;
       }
 
@@ -110,12 +113,21 @@ export const Repositories = ({
 
     const starredRepos = localStorage.getItem('starred');
     if (!starredRepos) {
+      setIsEmpty(true);
+      setEmptyMessage('You have no starred repositories.');
       return;
     }
 
-    const starredReposArray = JSON.parse(starredRepos);
+    const starredReposArray: IRepo[] = JSON.parse(starredRepos);
+    if (!starredReposArray.length) {
+      setIsEmpty(true);
+      setEmptyMessage('You have no starred repositories.');
+      setRepositories([]);
+      return;
+    }
 
     setRepositories(starredReposArray);
+    setIsEmpty(false);
   }, [showStarredRepos]);
 
   return (
@@ -128,7 +140,7 @@ export const Repositories = ({
           return <Repository key={repository.id} {...repository} />;
         })}
         {isLoading && <Spinner />}
-        {isEmpty && <small>No more data to load.</small>}
+        {isEmpty && !isLoading && <small>{emptyMessage}</small>}
         {error && <span className='error'>{error}</span>}
       </div>
     </section>
