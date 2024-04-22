@@ -25,8 +25,7 @@ export const Repositories = ({
   const [repositories, setRepositories] = useState<IRepo[]>([]);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [emptyMessage, setEmptyMessage] = useState('');
+  const [emptyMessage, setEmptyMessage] = useState<string | undefined>();
 
   const handleError = (error: Error) => {
     console.error(error);
@@ -42,14 +41,13 @@ export const Repositories = ({
 
         if (!response?.data?.items.length) {
           setEmptyMessage('No trending repositories to show.');
-          setIsEmpty(true);
           return;
         }
 
         const repos = response.data.items;
         setRepositories(repos);
         setPage((prevPage) => prevPage + 1);
-        setIsEmpty(false);
+        setEmptyMessage('');
       } catch (error) {
         handleError(error as Error);
       } finally {
@@ -72,7 +70,6 @@ export const Repositories = ({
       const response = await getRepos(page, languageFilter);
 
       if (!response?.data?.items.length) {
-        setIsEmpty(true);
         setEmptyMessage('No more repositories to load.');
         return;
       }
@@ -90,7 +87,7 @@ export const Repositories = ({
   // Add scroll event listener for infinte scrolling
   useEffect(() => {
     const handleScroll = () => {
-      if (isLoading || isEmpty) {
+      if (isLoading || Boolean(emptyMessage)) {
         return;
       }
 
@@ -107,7 +104,7 @@ export const Repositories = ({
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [fetchData, isLoading, isEmpty]);
+  }, [fetchData, isLoading, emptyMessage]);
 
   // Show starred repos on filter change
   useEffect(() => {
@@ -117,7 +114,6 @@ export const Repositories = ({
 
     const starredRepos = localStorage.getItem('starred');
     if (!starredRepos) {
-      setIsEmpty(true);
       setRepositories([]);
       setEmptyMessage('You have no starred repositories.');
       return;
@@ -125,14 +121,13 @@ export const Repositories = ({
 
     const starredReposArray: IRepo[] = JSON.parse(starredRepos);
     if (!starredReposArray.length) {
-      setIsEmpty(true);
       setEmptyMessage('You have no starred repositories.');
       setRepositories([]);
       return;
     }
 
     setRepositories(starredReposArray);
-    setIsEmpty(false);
+    setEmptyMessage('');
   }, [showStarredRepos]);
 
   return (
@@ -145,7 +140,7 @@ export const Repositories = ({
           return <Repository key={repository.id} {...repository} />;
         })}
         {isLoading && <Spinner />}
-        {isEmpty && !isLoading && <h4>{emptyMessage}</h4>}
+        {Boolean(emptyMessage) && !isLoading && <h4>{emptyMessage}</h4>}
         {error && <span className='error'>{error}</span>}
       </div>
     </section>
