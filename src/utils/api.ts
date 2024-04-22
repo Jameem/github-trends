@@ -3,7 +3,7 @@ import { getFilterDate } from './date';
 
 // Setup axios base configuration
 export const initializeAxios = () => {
-  axios.defaults.baseURL = `https://api.github.com/search/`;
+  axios.defaults.baseURL = 'https://api.github.com/search/';
   axios.defaults.headers.common['Authorization'] = `Bearer ${
     import.meta.env.VITE_GITHUB_TOKEN
   }`;

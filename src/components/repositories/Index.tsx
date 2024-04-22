@@ -118,6 +118,7 @@ export const Repositories = ({
     const starredRepos = localStorage.getItem('starred');
     if (!starredRepos) {
       setIsEmpty(true);
+      setRepositories([]);
       setEmptyMessage('You have no starred repositories.');
       return;
     }
